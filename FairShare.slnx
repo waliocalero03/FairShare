@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="FairShare.API/FairShare.API.csproj" />
+  <Project Path="FairShare.Core/FairShare.Core.csproj" />
+</Solution>
