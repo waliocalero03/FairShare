@@ -1,8 +1,22 @@
+using DbUp;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+
+
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+if(string.IsNullOrEmpty(connectionString))
+{
+    throw new InvalidOperationException("Cadena de conexión no encontrada en la configuración.");
+}
+
+ReviewBBDD(connectionString);
 
 var app = builder.Build();
 
@@ -14,28 +28,37 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+app.UseAuthorization();
 
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast = Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
+app.MapControllers();
 
 app.Run();
 
-internal record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
+
+void ReviewBBDD(string connectionString)
 {
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+    EnsureDatabase.For.PostgresqlDatabase(connectionString);
+
+    var upgrader = DeployChanges.To
+        .PostgresqlDatabase(connectionString)
+        .WithScriptsEmbeddedInAssembly(typeof(FairShare.Data.AssemblyReference).Assembly)
+        .LogToConsole()
+        .Build();
+
+    var result = upgrader.PerformUpgrade();
+
+    if (!result.Successful)
+    {
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.WriteLine("Error en la migración de la base de datos:");
+        Console.WriteLine(result.Error);
+        Console.ResetColor();
+
+        // Detiene el arranque si la base de datos falla
+        throw new Exception("Fallo al inicializar la base de datos", result.Error);
+    }
+
+    Console.ForegroundColor = ConsoleColor.Green;
+    Console.WriteLine("¡Base de datos actualizada y lista!");
+    Console.ResetColor();
 }

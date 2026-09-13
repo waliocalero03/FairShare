@@ -1,4 +1,5 @@
 <Solution>
-  <Project Path="FairShare.API/FairShare.API.csproj" />
+  <Project Path="FairShare.API/FairShare.API.csproj" Id="90276057-649f-418e-b0e6-f48bb3df157a" />
   <Project Path="FairShare.Core/FairShare.Core.csproj" />
+  <Project Path="FairShare.Data/FairShare.Data.csproj" />
 </Solution>
