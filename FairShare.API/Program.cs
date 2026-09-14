@@ -1,4 +1,11 @@
 using DbUp;
+using FairShare.API.Mappers;
+using FairShare.API.Mappers.Interfaces;
+using FairShare.Data.Interfaces;
+using FairShare.Data.Repositories;
+using Npgsql;
+using Scalar.AspNetCore;
+using System.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,12 +25,23 @@ if(string.IsNullOrEmpty(connectionString))
 
 ReviewBBDD(connectionString);
 
+// MAPPERS
+builder.Services.AddSingleton<IGroupMapper, GroupMapper>();
+
+// DB CONNECTION
+builder.Services.AddTransient<IDbConnection>(sp => new NpgsqlConnection(connectionString));
+
+// REPOSITORIES
+builder.Services.AddSingleton<IGroupRepository, GroupRepository>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    // This is for have the visual interface like Swagger UI
+    app.MapScalarApiReference();
 }
 
 app.UseHttpsRedirection();
