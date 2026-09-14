@@ -2,6 +2,7 @@
 using FairShare.API.Mappers.Interfaces;
 using FairShare.Core;
 using FairShare.Data.Interfaces;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FairShare.API.Controllers
@@ -12,11 +13,15 @@ namespace FairShare.API.Controllers
     {
         private readonly IGroupRepository _groupRepository;
         private readonly IGroupMapper _groupMapper;
+        private readonly IValidator<CreateGroupRequest> _createValidator;
+        private readonly IValidator<UpdateGroupRequest> _updateValidator;
 
-        public GroupsController(IGroupRepository groupRepository, IGroupMapper groupMapper)
+        public GroupsController(IGroupRepository groupRepository, IGroupMapper groupMapper, IValidator<CreateGroupRequest> createValidator, IValidator<UpdateGroupRequest> updateValidator)
         {
             _groupRepository = groupRepository;
             _groupMapper = groupMapper;
+            _createValidator = createValidator;
+            _updateValidator = updateValidator;
         }
 
         // 1. GET: api/groups/{id}
@@ -47,6 +52,14 @@ namespace FairShare.API.Controllers
         [HttpPost]
         public IActionResult Create([FromBody] CreateGroupRequest request)
         {
+            var validationResult = _createValidator.Validate(request);
+
+            if (!validationResult.IsValid)
+            {
+                var errors = validationResult.Errors.Select(e => e.ErrorMessage);
+                return BadRequest(new { message = "Datos inválidos", errors });
+            }
+
             var newGroup = _groupMapper.ToEntity(request);
             bool success = _groupRepository.CreateGroup(newGroup);
 
@@ -60,6 +73,14 @@ namespace FairShare.API.Controllers
         [HttpPut]
         public IActionResult Update([FromBody] UpdateGroupRequest request)
         {
+            var validationResult = _updateValidator.Validate(request);
+
+            if (!validationResult.IsValid)
+            {
+                var errors = validationResult.Errors.Select(e => e.ErrorMessage);
+                return BadRequest(new { message = "Datos inválidos", errors });
+            }
+
             // Creamos la entidad asignándole el ID de la URL
             var groupToUpdate = _groupMapper.ToEntity(request);
             bool success = _groupRepository.UpdateGroup(groupToUpdate);

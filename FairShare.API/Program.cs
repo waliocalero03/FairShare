@@ -3,6 +3,7 @@ using FairShare.API.Mappers;
 using FairShare.API.Mappers.Interfaces;
 using FairShare.Data.Interfaces;
 using FairShare.Data.Repositories;
+using FluentValidation;
 using Npgsql;
 using Scalar.AspNetCore;
 using System.Data;
@@ -33,6 +34,9 @@ builder.Services.AddTransient<IDbConnection>(sp => new NpgsqlConnection(connecti
 
 // REPOSITORIES
 builder.Services.AddSingleton<IGroupRepository, GroupRepository>();
+
+// VALIDATORS
+builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 
 var app = builder.Build();
 
