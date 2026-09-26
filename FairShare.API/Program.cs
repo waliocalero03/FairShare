@@ -1,5 +1,6 @@
 using DbUp;
 using FairShare.API.Mappers;
+using FairShare.API.Mappers.Classes;
 using FairShare.API.Mappers.Interfaces;
 using FairShare.Data.Interfaces;
 using FairShare.Data.Repositories;
@@ -28,12 +29,14 @@ ReviewBBDD(connectionString);
 
 // MAPPERS
 builder.Services.AddSingleton<IGroupMapper, GroupMapper>();
+builder.Services.AddSingleton<IParticipantMapper, ParticipantMapper>();
 
 // DB CONNECTION
 builder.Services.AddTransient<IDbConnection>(sp => new NpgsqlConnection(connectionString));
 
 // REPOSITORIES
 builder.Services.AddSingleton<IGroupRepository, GroupRepository>();
+builder.Services.AddScoped<IParticipantRepository, ParticipantRepository>();
 
 // VALIDATORS
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();

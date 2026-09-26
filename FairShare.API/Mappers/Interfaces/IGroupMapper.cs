@@ -1,4 +1,4 @@
-﻿using FairShare.API.DTOs;
+﻿using FairShare.API.DTOs.Group;
 using FairShare.Core;
 
 namespace FairShare.API.Mappers.Interfaces

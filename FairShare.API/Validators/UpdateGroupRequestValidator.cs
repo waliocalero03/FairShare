@@ -1,4 +1,4 @@
-﻿using FairShare.API.DTOs;
+﻿using FairShare.API.DTOs.Group;
 using FluentValidation;
 
 namespace FairShare.API.Validators

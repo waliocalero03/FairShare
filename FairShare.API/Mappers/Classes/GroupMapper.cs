@@ -1,9 +1,9 @@
-﻿using FairShare.API.DTOs;
+﻿using FairShare.API.DTOs.Group;
 using FairShare.API.Mappers.Interfaces;
 using FairShare.Core;
 using Riok.Mapperly.Abstractions;
 
-namespace FairShare.API.Mappers
+namespace FairShare.API.Mappers.Classes
 {
     [Mapper]
     public partial class GroupMapper : IGroupMapper
