@@ -7,6 +7,8 @@ using FairShare.Data.Repositories;
 using FluentValidation;
 using Npgsql;
 using Scalar.AspNetCore;
+using Serilog;
+using Serilog.Events;
 using System.Data;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -31,6 +33,7 @@ ReviewBBDD(connectionString);
 builder.Services.AddSingleton<IGroupMapper, GroupMapper>();
 builder.Services.AddSingleton<IParticipantMapper, ParticipantMapper>();
 builder.Services.AddSingleton<IExpenseMapper, ExpenseMapper>();
+builder.Services.AddSingleton<IExpenseSplitMapper, ExpenseSplitMapper>();
 
 // DB CONNECTION
 builder.Services.AddTransient<IDbConnection>(sp => new NpgsqlConnection(connectionString));
@@ -39,9 +42,24 @@ builder.Services.AddTransient<IDbConnection>(sp => new NpgsqlConnection(connecti
 builder.Services.AddSingleton<IGroupRepository, GroupRepository>();
 builder.Services.AddScoped<IParticipantRepository, ParticipantRepository>();
 builder.Services.AddScoped<IExpenseRepository, ExpenseRepository>();
+builder.Services.AddScoped<IExpenseSplitRepository, ExpenseSplitRepository>();
 
 // VALIDATORS
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
+
+// SERILOG
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Information()
+    .WriteTo.Console()
+    .WriteTo.File("logs/fairshare-.txt", rollingInterval: RollingInterval.Day)
+    .WriteTo.PostgreSQL(
+        connectionString,
+        "Logs",
+        null,
+        null,
+        restrictedToMinimumLevel: LogEventLevel.Information,
+        needAutoCreateTable: true)  
+    .CreateLogger();
 
 var app = builder.Build();
 
