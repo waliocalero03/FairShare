@@ -22,5 +22,16 @@ namespace FairShare.API.Mappers.Classes
         [MapperIgnoreTarget(nameof(Group.Participants))]
         [MapperIgnoreTarget(nameof(Group.Expenses))]
         public partial Group ToEntity(UpdateGroupRequest request);
+
+        public GroupResponse ToResponse(Group entity)
+        {
+            return new GroupResponse
+            {
+                Id = entity.Id,
+                Name = entity.Name,
+                Code = entity.Code,
+                CreatedAt = entity.CreatedAt
+            };
+        }
     }
 }

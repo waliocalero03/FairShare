@@ -30,6 +30,7 @@ ReviewBBDD(connectionString);
 // MAPPERS
 builder.Services.AddSingleton<IGroupMapper, GroupMapper>();
 builder.Services.AddSingleton<IParticipantMapper, ParticipantMapper>();
+builder.Services.AddSingleton<IExpenseMapper, ExpenseMapper>();
 
 // DB CONNECTION
 builder.Services.AddTransient<IDbConnection>(sp => new NpgsqlConnection(connectionString));
@@ -37,6 +38,7 @@ builder.Services.AddTransient<IDbConnection>(sp => new NpgsqlConnection(connecti
 // REPOSITORIES
 builder.Services.AddSingleton<IGroupRepository, GroupRepository>();
 builder.Services.AddScoped<IParticipantRepository, ParticipantRepository>();
+builder.Services.AddScoped<IExpenseRepository, ExpenseRepository>();
 
 // VALIDATORS
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();

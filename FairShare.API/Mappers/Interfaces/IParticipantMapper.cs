@@ -7,5 +7,6 @@ namespace FairShare.API.Mappers.Interfaces
     {
         Participant ToEntity(CreateParticipantRequest request);
         Participant ToEntity(UpdateParticipantRequest request);
+        ParticipantResponse ToResponse(Participant entity);
     }
 }

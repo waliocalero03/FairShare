@@ -38,14 +38,16 @@ namespace FairShare.API.Controllers
             if (participant == null)
                 return NotFound(new { message = $"No se encontró el participante con ID {id}" });
 
-            return Ok(participant);
+            var response = _mapper.ToResponse(participant);
+            return Ok(response);
         }
 
         [HttpGet("group/{groupId}")]
         public IActionResult GetByGroupId(int groupId)
         {
             var participants = _participantRepository.GetParticipantsByGroupId(groupId);
-            return Ok(participants);
+            var responses = participants.Select(p => _mapper.ToResponse(p)).ToList();
+            return Ok(responses);
         }
 
         [HttpPost]

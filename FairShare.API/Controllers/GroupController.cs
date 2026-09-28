@@ -33,7 +33,8 @@ namespace FairShare.API.Controllers
             if (group == null)
                 return NotFound(new { message = $"No se encontró el grupo con ID {id}" });
 
-            return Ok(group);
+            var response = _groupMapper.ToResponse(group);
+            return Ok(response);
         }
 
         // 2. GET: api/groups/code/{code}
@@ -45,7 +46,8 @@ namespace FairShare.API.Controllers
             if (group == null)
                 return NotFound(new { message = "Código de grupo no válido" });
 
-            return Ok(group);
+            var response = _groupMapper.ToResponse(group);
+            return Ok(response);
         }
 
         // 3. POST: api/groups
