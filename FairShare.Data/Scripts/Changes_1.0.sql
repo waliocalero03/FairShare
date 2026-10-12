@@ -1,0 +1,1 @@
+alter table Participants add column Email varchar(100);

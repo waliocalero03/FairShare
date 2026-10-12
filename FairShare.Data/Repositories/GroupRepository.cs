@@ -70,6 +70,16 @@ namespace FairShare.Data.Repositories
             return _dbConnection.QueryFirstOrDefault<Group>(sql, new { Code = code });
         }
 
+        public IEnumerable<Group> GetGroupsByParticipantEmail(string email)
+        {
+            string sql = @"
+                SELECT g.* 
+                FROM Groups g
+                INNER JOIN Participants p ON g.Id = p.GroupId
+                WHERE p.Email = @Email;";
+            return _dbConnection.Query<Group>(sql, new { Email = email });
+        }
+
         #endregion
 
         #region Private Methods

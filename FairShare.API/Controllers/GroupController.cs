@@ -50,6 +50,17 @@ namespace FairShare.API.Controllers
             return Ok(response);
         }
 
+        // 2.1 GET: api/groups/participant/{email}
+        [HttpGet("participant/{email}")]
+        public IActionResult GetByParticipantEmail(string email)
+        {
+            var groups = _groupRepository.GetGroupsByParticipantEmail(email);
+            if (groups == null || !groups.Any())
+                return NotFound(new { message = $"No se encontraron grupos para el participante con correo {email}" });
+            var response = groups.Select(g => _groupMapper.ToResponse(g)).ToList();
+            return Ok(response);
+        }
+
         // 3. POST: api/groups
         [HttpPost]
         public IActionResult Create([FromBody] CreateGroupRequest request)

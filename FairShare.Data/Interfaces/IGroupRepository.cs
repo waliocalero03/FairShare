@@ -12,5 +12,6 @@ namespace FairShare.Data.Interfaces
         bool UpdateGroup(Group group);
         bool DeleteGroup(int idGroup);
         Group? GetGroupByCode(string code);
+        IEnumerable<Group> GetGroupsByParticipantEmail(string email);
     }
 }

@@ -9,5 +9,6 @@ namespace FairShare.Core
         public int Id { get; set; }
         public int GroupId { get; set; }
         public required string Name { get; set; }
+        public string? Email { get; set; }
     }
 }
