@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Scripts\" />
 	<EmbeddedResource Include="Scripts\*.sql" />
   </ItemGroup>
 

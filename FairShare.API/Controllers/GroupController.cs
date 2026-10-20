@@ -15,6 +15,7 @@ namespace FairShare.API.Controllers
         private readonly IGroupMapper _groupMapper;
         private readonly IValidator<CreateGroupRequest> _createValidator;
         private readonly IValidator<UpdateGroupRequest> _updateValidator;
+        private const int IdNotFound = 0;
 
         public GroupsController(IGroupRepository groupRepository, IGroupMapper groupMapper, IValidator<CreateGroupRequest> createValidator, IValidator<UpdateGroupRequest> updateValidator)
         {
@@ -74,12 +75,12 @@ namespace FairShare.API.Controllers
             }
 
             var newGroup = _groupMapper.ToEntity(request);
-            bool success = _groupRepository.CreateGroup(newGroup);
+            int newGroupId = _groupRepository.CreateGroup(newGroup);
 
-            if (!success)
+            if (newGroupId == IdNotFound)
                 return BadRequest(new { message = "No se pudo crear el grupo." });
 
-            return Created();
+            return Ok(new { GroupId = newGroupId });
         }
 
         // 4. PUT: api/groups/{id}

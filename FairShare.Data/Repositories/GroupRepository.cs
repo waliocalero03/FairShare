@@ -36,14 +36,16 @@ namespace FairShare.Data.Repositories
             return _dbConnection.QueryFirstOrDefault<Group>(sql, new { Id = idGroup });
         }
 
-        public bool CreateGroup(Group group)
+        public int CreateGroup(Group group)
         {
             // Ejecutamos el INSERT. Execute devuelve el número de filas afectadas.
             string sql = @"
                 INSERT INTO Groups (Name, Code) 
-                VALUES (@Name, @Code);";
+                VALUES (@Name, @Code)
+                RETURNING Id;";
 
-            return ExecuteQuery(sql, group);
+            int newGroupId = _dbConnection.ExecuteScalar<int>(sql, group);
+            return newGroupId;
         }
 
         public bool UpdateGroup(Group group)

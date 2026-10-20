@@ -4,11 +4,8 @@
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>d0f971b6-8ab4-4070-8fef-0ff31bb23bd1</UserSecretsId>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Content Remove="appsettings.Development.json" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="dbup-postgresql" Version="7.0.1" />
