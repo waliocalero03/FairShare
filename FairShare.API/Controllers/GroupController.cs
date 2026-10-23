@@ -12,6 +12,10 @@ namespace FairShare.API.Controllers
     public class GroupsController : ControllerBase
     {
         private readonly IGroupRepository _groupRepository;
+        private readonly IExpenseSplitRepository _expenseSplitRepository;
+        private readonly IExpenseRepository _expenseRepository;
+        private readonly IParticipantRepository _participantRepository;
+
         private readonly IGroupMapper _groupMapper;
         private readonly IValidator<CreateGroupRequest> _createValidator;
         private readonly IValidator<UpdateGroupRequest> _updateValidator;
@@ -60,6 +64,19 @@ namespace FairShare.API.Controllers
                 return NotFound(new { message = $"No se encontraron grupos para el participante con correo {email}" });
             var response = groups.Select(g => _groupMapper.ToResponse(g)).ToList();
             return Ok(response);
+        }
+
+        [HttpGet("groupdetail/{id}")]
+        public IActionResult GetGroupDetailById(int id)
+        {
+            var groupInfo = _groupRepository.GetGroupById(id);
+            if (groupInfo == null)
+                return NotFound(new { message = $"No se encontró el grupo con ID {id}" });
+
+
+            var groupDetailResponse = _groupMapper.ToDetailDTO(groupInfo);
+
+            return Ok(groupDetailResponse);
         }
 
         // 3. POST: api/groups

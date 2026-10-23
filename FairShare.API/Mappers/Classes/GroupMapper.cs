@@ -33,5 +33,15 @@ namespace FairShare.API.Mappers.Classes
                 CreatedAt = entity.CreatedAt
             };
         }
+
+        public GroupDetailDTO ToDetailDTO(Group entity)
+        {
+            return new GroupDetailDTO
+            {
+                Id = entity.Id,
+                Name = entity.Name,
+                Code = entity.Code
+            };
+        }
     }
 }

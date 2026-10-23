@@ -8,5 +8,6 @@ namespace FairShare.API.Mappers.Interfaces
         Group ToEntity(CreateGroupRequest request);
         Group ToEntity(UpdateGroupRequest request);
         GroupResponse ToResponse(Group entity);
+        GroupDetailDTO ToDetailDTO(Group entity);
     }
 }

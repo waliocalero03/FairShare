@@ -39,6 +39,7 @@ builder.Services.AddTransient<IDbConnection>(sp => new NpgsqlConnection(connecti
 builder.Services.AddSingleton<IGroupRepository, GroupRepository>();
 builder.Services.AddScoped<IParticipantRepository, ParticipantRepository>();
 builder.Services.AddScoped<IExpenseRepository, ExpenseRepository>();
+builder.Services.AddScoped<IExpenseSplitRepository, ExpenseSplitRepository>();
 
 // VALIDATORS
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
