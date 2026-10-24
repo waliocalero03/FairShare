@@ -1,4 +1,7 @@
-﻿using FairShare.API.DTOs.Group;
+﻿using FairShare.API.DTOs.Expense;
+using FairShare.API.DTOs.ExpenseSplit;
+using FairShare.API.DTOs.Group;
+using FairShare.API.DTOs.Participant;
 using FairShare.API.Mappers.Interfaces;
 using FairShare.Core;
 using FairShare.Data.Interfaces;
@@ -12,17 +15,40 @@ namespace FairShare.API.Controllers
     public class GroupsController : ControllerBase
     {
         private readonly IGroupRepository _groupRepository;
+        private readonly IExpenseSplitRepository _expenseSplitRepository;
+        private readonly IExpenseRepository _expenseRepository;
+        private readonly IParticipantRepository _participantRepository;
+
         private readonly IGroupMapper _groupMapper;
+        private readonly IParticipantMapper _participantMapper;
+        private readonly IExpenseMapper _expenseMapper;
+        private readonly IExpenseSplitMapper _expenseSplitMapper;
+
         private readonly IValidator<CreateGroupRequest> _createValidator;
         private readonly IValidator<UpdateGroupRequest> _updateValidator;
         private const int IdNotFound = 0;
 
-        public GroupsController(IGroupRepository groupRepository, IGroupMapper groupMapper, IValidator<CreateGroupRequest> createValidator, IValidator<UpdateGroupRequest> updateValidator)
+        public GroupsController(IGroupRepository groupRepository,
+                                IGroupMapper groupMapper,
+                                IExpenseSplitMapper expenseSplitMapper,
+                                IValidator<CreateGroupRequest> createValidator,
+                                IValidator<UpdateGroupRequest> updateValidator,
+                                IExpenseSplitRepository expenseSplitRepository,
+                                IExpenseRepository expenseRepository,
+                                IParticipantRepository participantRepository,
+                                IParticipantMapper participantMapper,
+                                IExpenseMapper expenseMapper)
         {
             _groupRepository = groupRepository;
             _groupMapper = groupMapper;
+            _expenseSplitMapper = expenseSplitMapper;
             _createValidator = createValidator;
             _updateValidator = updateValidator;
+            _expenseSplitRepository = expenseSplitRepository;
+            _expenseRepository = expenseRepository;
+            _participantRepository = participantRepository;
+            _participantMapper = participantMapper;
+            _expenseMapper = expenseMapper;
         }
 
         // 1. GET: api/groups/{id}
@@ -60,6 +86,26 @@ namespace FairShare.API.Controllers
                 return NotFound(new { message = $"No se encontraron grupos para el participante con correo {email}" });
             var response = groups.Select(g => _groupMapper.ToResponse(g)).ToList();
             return Ok(response);
+        }
+
+        [HttpGet("groupdetail/{id}")]
+        public IActionResult GetGroupDetailById(int id)
+        {
+            var groupInfo = _groupRepository.GetGroupById(id);
+            if (groupInfo == null)
+                return NotFound(new { message = $"No se encontró el grupo con ID {id}" });
+
+            var participants = _participantRepository.GetParticipantsByGroupId(id);
+            var expenses = _expenseRepository.GetExpensesByGroupId(id);
+            var expenseSplits = _expenseSplitRepository.GetExpenseSplitByIdGroup(id);
+
+            List<ParticipantResponse> participantResponses = participants.Select(p => _participantMapper.ToResponse(p)).ToList();
+            List<ExpenseDetailDTO> expenseResponses = expenses.Select(e => _expenseMapper.ToDetailDTO(e)).ToList();
+            List<ExpenseSplitDTO> expenseSplitReponse = expenseSplits.Select(es => _expenseSplitMapper.ToDetailDTO(es)).ToList();
+
+            var groupDetailResponse = _groupMapper.ToDetailDTO(groupInfo, participantResponses, expenseResponses, expenseSplitReponse);
+
+            return Ok(groupDetailResponse);
         }
 
         // 3. POST: api/groups

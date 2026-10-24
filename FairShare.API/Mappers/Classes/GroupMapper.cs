@@ -1,4 +1,7 @@
-﻿using FairShare.API.DTOs.Group;
+﻿using FairShare.API.DTOs.Expense;
+using FairShare.API.DTOs.ExpenseSplit;
+using FairShare.API.DTOs.Group;
+using FairShare.API.DTOs.Participant;
 using FairShare.API.Mappers.Interfaces;
 using FairShare.Core;
 using Riok.Mapperly.Abstractions;
@@ -31,6 +34,23 @@ namespace FairShare.API.Mappers.Classes
                 Name = entity.Name,
                 Code = entity.Code,
                 CreatedAt = entity.CreatedAt
+            };
+        }
+
+        public GroupDetailDTO ToDetailDTO(Group entity, List<ParticipantResponse> participants, List<ExpenseDetailDTO> expenses, List<ExpenseSplitDTO> expenseSplits)
+        {
+            foreach(var expense in expenses)
+            {
+                expense.Splits = expenseSplits.Where(split => split.ExpenseId == expense.Id).ToList();
+            }
+
+            return new GroupDetailDTO
+            {
+                Id = entity.Id,
+                Name = entity.Name,
+                Code = entity.Code,
+                Participants = participants,
+                Expenses = expenses
             };
         }
     }
