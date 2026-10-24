@@ -8,5 +8,6 @@ namespace FairShare.API.Mappers.Interfaces
         Expense ToEntity(CreateExpenseRequest request);
         Expense ToEntity(UpdateExpenseRequest request);
         ExpenseResponse ToResponse(Expense entity);
+        ExpenseDetailDTO ToDetailDTO(Expense entity);
     }
 }

@@ -1,3 +1,5 @@
+using FairShare.API.DTOs.ExpenseSplit;
+
 namespace FairShare.API.DTOs.Expense
 {
     public class ExpenseResponse

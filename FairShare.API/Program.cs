@@ -31,6 +31,7 @@ ReviewBBDD(connectionString);
 builder.Services.AddSingleton<IGroupMapper, GroupMapper>();
 builder.Services.AddSingleton<IParticipantMapper, ParticipantMapper>();
 builder.Services.AddSingleton<IExpenseMapper, ExpenseMapper>();
+builder.Services.AddSingleton<IExpenseSplitMapper, ExpenseSplitMapper>();
 
 // DB CONNECTION
 builder.Services.AddTransient<IDbConnection>(sp => new NpgsqlConnection(connectionString));

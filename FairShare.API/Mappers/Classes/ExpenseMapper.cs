@@ -43,5 +43,18 @@ namespace FairShare.API.Mappers.Classes
                 Date = entity.Date
             };
         }
+
+        public ExpenseDetailDTO ToDetailDTO(Expense entity)
+        {
+            return new ExpenseDetailDTO
+            {
+                Id = entity.Id,
+                GroupId = entity.GroupId,
+                PayerId = entity.PayerId,
+                Description = entity.Description,
+                TotalAmount = entity.TotalAmount,
+                Date = entity.Date
+            };
+        }
     }
 }

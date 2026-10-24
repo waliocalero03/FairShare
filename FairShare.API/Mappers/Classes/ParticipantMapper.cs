@@ -10,10 +10,12 @@ namespace FairShare.API.Mappers.Classes
     {
         // Ignoramos el Id porque la BD lo generará solo
         [MapperIgnoreTarget(nameof(Participant.Id))]
+        [MapperIgnoreTarget(nameof(Participant.Email))]
         public partial Participant ToEntity(CreateParticipantRequest request);
 
         // Ignoramos Id y GroupId porque no vienen en el request de actualización
         [MapperIgnoreTarget(nameof(Participant.GroupId))]
+        [MapperIgnoreTarget(nameof(Participant.Email))]
         public partial Participant ToEntity(UpdateParticipantRequest request);
 
         public ParticipantResponse ToResponse(Participant entity)
